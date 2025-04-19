@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import bibleText from './../bible/bible.txt?raw'
 import {filterBible, getDailySymbol} from './../api/bibleReader.js'
+import {getStockToday} from './../api/checkStock.js'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -12,9 +13,22 @@ function App() {
   //   console.log(data.toString);
   // })
 
-  const newBibleText = filterBible()
-  console.log(newBibleText)
-  console.log(getDailySymbol())
+  // const newBibleText = filterBible()
+  // console.log(newBibleText)
+  
+  const [stockName, setStockName] = useState("default stock")
+
+  useEffect (() => {
+    async function fetchStock() {
+      const result = await getStockToday();
+      setStockName(result)
+    }
+    fetchStock()
+  }, [])
+
+  function TodayStock() {
+    return <p>{stockName}</p>
+  }
 
   return (
     <>
@@ -35,6 +49,7 @@ function App() {
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
       </div>
+      <TodayStock></TodayStock>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
