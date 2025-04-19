@@ -6,7 +6,7 @@ dotenv.config();
 // simulate a request and response
 const mockReq = {
   query: {
-    symbol: 'tesco' // you can change this to any keyword
+    symbol: 'ul' // you can change this to any keyword
   }
 };
 
