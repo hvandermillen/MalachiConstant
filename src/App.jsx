@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import bibleText from './../bible/bible.txt?raw'
-import {parseBible} from './../api/bibleReader.js'
+import {filterBible, getDailySymbol} from './../api/bibleReader.js'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -12,8 +12,9 @@ function App() {
   //   console.log(data.toString);
   // })
 
-  const newBibleText = parseBible()
+  const newBibleText = filterBible()
   console.log(newBibleText)
+  console.log(getDailySymbol())
 
   return (
     <>
