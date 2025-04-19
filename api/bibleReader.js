@@ -35,12 +35,23 @@ function getDailySymbol() {
     const currentDay = new Date()
     const risenDate = new Date("0040-04-09")
     const daysSinceEaster = (currentDay - risenDate) / (1000 * 60 * 60 * 24)
-    const symbol2char = `${bibleString.charAt(daysSinceEaster*2)}${bibleString.charAt(daysSinceEaster*2+1)}`
+    const symbol2char = `${bibleString.charAt(daysSinceEaster*3)}${bibleString.charAt(daysSinceEaster*3+1)}`
     const symbol3char = `${bibleString.charAt(daysSinceEaster*3)}${bibleString.charAt(daysSinceEaster*3+1)}${bibleString.charAt(daysSinceEaster*3+1)}`  
     return [symbol2char, symbol3char]
 }
 
+function getBibleSubstring() {
+    const bibleString = bibleTextFiltered
+    // console.log(bibleString)
+    const currentDay = new Date()
+    const risenDate = new Date("0040-04-09")
+    const daysSinceEaster = (currentDay - risenDate) / (1000 * 60 * 60 * 24)
+    const stringStart = daysSinceEaster*3
+    return bibleString.substring(stringStart, stringStart+20)
+}
+
 export {
     filterBible,
-    getDailySymbol
+    getDailySymbol,
+    getBibleSubstring
 }

@@ -1,10 +1,14 @@
 // api/check-symbol.js
-import {getDailySymbol} from './../api/bibleReader.js'
+import {getBibleSubstring} from './../api/bibleReader.js'
+import Papa from 'papaparse';
+
+const stockObj = await parseCSV()
+console.log(stockObj)
 
 export default async function handler(req, res) {
     const { symbol } = req.query;
     const apiKey = import.meta.env.VITE_ALPHAVANTAGE_API_KEY;
-  
+
     if (!symbol) {
       return res.status(400).json({ error: 'Missing symbol parameter' });
     }
@@ -13,6 +17,7 @@ export default async function handler(req, res) {
       const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${symbol}&apikey=${apiKey}`;
       const response = await fetch(url);
       const data = await response.json();
+      console.log("Full AlphaVantage response:", JSON.stringify(data, null, 2));
   
       const bestMatch = data.bestMatches?.[0];
   
@@ -33,39 +38,69 @@ export default async function handler(req, res) {
     }
   }
 
-async function getStockToday() {
-  const dailySymbols = getDailySymbol()
-  let currentSymbolNum = 1
-  const req = {
-    query: {
-      symbol: dailySymbols[1] // you can change this to any keyword
+  async function newHandler(symbol) {
+    const polygonApiKey = import.meta.env.VITE_POLYGON_API_KEY;
+    const url = `https://api.polygon.io/v3/reference/tickers?ticker=${symbol}&market=stocks&active=true&limit=1&apiKey=${polygonApiKey}`;
+  
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.error("Fetch failed:", response.status, response.statusText);
+        return null;
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching from Polygon:", error);
+      return null;
     }
-  };
-  const res = {
-    status(code) {
-      return {
-        json(data) {
-          if (code != 200) {
-            console.log("NOT A STOCK!!");
-            currentSymbolNum--;
-          } else {
-            return data.name;
-          }
-        }
-      };
-    }
-  };
-
-  //first try 3-letter stock
-  await handler(req,res);
-
-  if (currentSymbolNum == 0) {
-    //try again with 2-letter stock
-    await handler(req,res);
   }
 
-  return "No stock available"
+  async function parseCSV() {
+    return new Promise ((resolve) => {
+      fetch('./../stocks/stock_info.csv')
+        .then(response => response.text())
+        .then(csvText => {
+          const result = Papa.parse(csvText, {
+            header: true,
+            skipEmptyLines: true
+          });
+          resolve(result.data); // array of objects!
+        });
+    })
+    
+  }
 
+  function isValidSymbol(symbol) {
+    for (const stock of stockObj) {
+      if (stock.Ticker === symbol) {
+        console.log("valid! " + stock.Name);
+        return stock.Name;
+      }
+    }
+    return false;
+  }
+
+  function getStockToday() {
+    const bibleSubstring = getBibleSubstring();
+    console.log("symbols: " + bibleSubstring);
+    let finalResult = false
+  
+    for (let startInd = 0; startInd < bibleSubstring.length - 5; startInd++) {
+      for (let i = 5; i > 1; i--) {
+        const currentSymbol = bibleSubstring.substring(startInd, startInd + i).toUpperCase();
+        console.log("current symbol: " + currentSymbol);
+        const result = isValidSymbol(currentSymbol);
+        if (result != false) {
+          console.log("VALID! " + result);
+          finalResult = result;
+          return finalResult
+        }
+      }
+    }
+  
+    return "No stock found";
   }
 
   export {getStockToday}
