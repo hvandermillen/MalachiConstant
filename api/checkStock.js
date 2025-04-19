@@ -34,29 +34,27 @@ export default async function handler(req, res) {
     }
   }
 
-  async function isValidSymbol(testSymbol) {
+  async function newHandler(symbol) {
+    const url = `https://ticker-2e1ica8b9.now.sh//keyword/${symbol}`
+    const response = await fetch(url, {
+      method: "GET",
+    })
+    .then(response => {
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    })
+    const data = await response.json()
+  }
+
+  async function isValidSymbol(symbol) {
     return new Promise(async (resolve) => {
-      const req = {
-        query: {
-          symbol: testSymbol
-        }
-      };
-  
-      const res = {
-        status(code) {
-          return {
-            json(data) {
-              if (code !== 200 || data.name === "" || data.name == undefined) {
-                resolve(false);
-              } else {
-                resolve(data.name);
-              }
-            }
-          };
-        }
-      };
-  
-      await handler(req, res);
+      const data = await newHandler(symbol)
+      if (data.results[0]) { //if we have a result
+        resolve(data.results[0].name)
+      } else {
+        resolve(false)
+      }
     });
   }
 
