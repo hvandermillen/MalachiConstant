@@ -73,19 +73,19 @@ export default async function handler(req, res) {
   }
 
   function isValidSymbol(symbol) {
-    stockObj.forEach(stock => {
-      //console.log(symbol + " " +  stock.Ticker)
-      if (stock.Ticker == symbol) {
-        console.log("valid! " + stock.Name)
-        return stock.Name
+    for (const stock of stockObj) {
+      if (stock.Ticker === symbol) {
+        console.log("valid! " + stock.Name);
+        return stock.Name;
       }
-    })
+    }
     return false;
   }
 
   function getStockToday() {
     const bibleSubstring = getBibleSubstring();
     console.log("symbols: " + bibleSubstring);
+    let finalResult = false
   
     for (let startInd = 0; startInd < bibleSubstring.length - 5; startInd++) {
       for (let i = 5; i > 1; i--) {
@@ -94,7 +94,8 @@ export default async function handler(req, res) {
         const result = isValidSymbol(currentSymbol);
         if (result != false) {
           console.log("VALID! " + result);
-          return result;
+          finalResult = result;
+          return finalResult
         }
       }
     }
