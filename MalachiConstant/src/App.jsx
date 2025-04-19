@@ -2,9 +2,16 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import bibleText from './assets/bible.txt?raw'
 
-function App() {
+async function App() {
   const [count, setCount] = useState(0)
+
+  // fs.readFile('/src/assets/bible.txt', (err,data) => {
+  //   console.log(data.toString);
+  // })
+
+  console.log(bibleText)
 
   return (
     <>
