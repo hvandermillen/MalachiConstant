@@ -1,3 +1,5 @@
+// change this later to vite format
+// and also in the env
 import dotenv from 'dotenv'
 dotenv.config()
 
