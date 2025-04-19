@@ -33,12 +33,37 @@ export default async function handler(req, res) {
     }
   }
 
-async function getStockToday() {
-  const dailySymbols = getDailySymbol()
-  let currentSymbolNum = 1
+async function isValidSymbol() {
+  let result = ""
   const req = {
     query: {
-      symbol: dailySymbols[1] // you can change this to any keyword
+      symbol: dailySymbols[currentSymbolNum] // you can change this to any keyword
+    }
+  };
+  const res = {
+    status(code) {
+      return {
+        json(data) {
+          if (code != 200) {
+            result = false
+          } else {
+            result = data.name;
+          }
+        }
+      };
+    }
+  };
+  return result
+}
+
+async function getStockToday() {
+  const dailySymbols = getDailySymbol()
+  console.log("symbols: " + dailySymbols)
+  let currentSymbolNum = 1
+  let result = ""
+  const req = {
+    query: {
+      symbol: dailySymbols[currentSymbolNum] // you can change this to any keyword
     }
   };
   const res = {
@@ -49,7 +74,9 @@ async function getStockToday() {
             console.log("NOT A STOCK!!");
             currentSymbolNum--;
           } else {
-            return data.name;
+            console.log(data.name)
+            console.log(dailySymbols[currentSymbolNum])
+            result = data.name;
           }
         }
       };
@@ -64,7 +91,7 @@ async function getStockToday() {
     await handler(req,res);
   }
 
-  return "No stock available"
+  return result
 
   }
 

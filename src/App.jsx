@@ -22,6 +22,7 @@ function App() {
     async function fetchStock() {
       const result = await getStockToday();
       setStockName(result)
+      console.log("result: " + result)
     }
     fetchStock()
   }, [])
