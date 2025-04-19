@@ -3,15 +3,17 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import bibleText from './../bible/bible.txt?raw'
+import {parseBible} from './../api/bibleReader.js'
 
-async function App() {
+function App() {
   const [count, setCount] = useState(0)
 
   // fs.readFile('/src/assets/bible.txt', (err,data) => {
   //   console.log(data.toString);
   // })
 
-  console.log(bibleText)
+  const newBibleText = parseBible()
+  console.log(newBibleText)
 
   return (
     <>
