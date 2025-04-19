@@ -2,7 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import bibleText from './assets/bible.txt?raw'
+import bibleText from './../bible/bible.txt?raw'
 
 async function App() {
   const [count, setCount] = useState(0)
