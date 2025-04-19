@@ -1,10 +1,14 @@
 // api/check-symbol.js
 import {getBibleSubstring} from './../api/bibleReader.js'
+import Papa from 'papaparse';
+
+const stockObj = await parseCSV()
+console.log(stockObj)
 
 export default async function handler(req, res) {
     const { symbol } = req.query;
     const apiKey = import.meta.env.VITE_ALPHAVANTAGE_API_KEY;
-  
+
     if (!symbol) {
       return res.status(400).json({ error: 'Missing symbol parameter' });
     }
@@ -35,30 +39,51 @@ export default async function handler(req, res) {
   }
 
   async function newHandler(symbol) {
-    const url = `https://ticker-2e1ica8b9.now.sh//keyword/${symbol}`
-    const response = await fetch(url, {
-      method: "GET",
-    })
-    .then(response => {
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    })
-    const data = await response.json()
-  }
-
-  async function isValidSymbol(symbol) {
-    return new Promise(async (resolve) => {
-      const data = await newHandler(symbol)
-      if (data.results[0]) { //if we have a result
-        resolve(data.results[0].name)
-      } else {
-        resolve(false)
+    const polygonApiKey = import.meta.env.VITE_POLYGON_API_KEY;
+    const url = `https://api.polygon.io/v3/reference/tickers?ticker=${symbol}&market=stocks&active=true&limit=1&apiKey=${polygonApiKey}`;
+  
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.error("Fetch failed:", response.status, response.statusText);
+        return null;
       }
-    });
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching from Polygon:", error);
+      return null;
+    }
   }
 
-  async function getStockToday() {
+  async function parseCSV() {
+    return new Promise ((resolve) => {
+      fetch('./../stocks/stock_info.csv')
+        .then(response => response.text())
+        .then(csvText => {
+          const result = Papa.parse(csvText, {
+            header: true,
+            skipEmptyLines: true
+          });
+          resolve(result.data); // array of objects!
+        });
+    })
+    
+  }
+
+  function isValidSymbol(symbol) {
+    stockObj.forEach(stock => {
+      //console.log(symbol + " " +  stock.Ticker)
+      if (stock.Ticker == symbol) {
+        console.log("valid! " + stock.Name)
+        return stock.Name
+      }
+    })
+    return false;
+  }
+
+  function getStockToday() {
     const bibleSubstring = getBibleSubstring();
     console.log("symbols: " + bibleSubstring);
   
@@ -66,8 +91,8 @@ export default async function handler(req, res) {
       for (let i = 5; i > 1; i--) {
         const currentSymbol = bibleSubstring.substring(startInd, startInd + i).toUpperCase();
         console.log("current symbol: " + currentSymbol);
-        const result = await isValidSymbol(currentSymbol);
-        if (result !== false) {
+        const result = isValidSymbol(currentSymbol);
+        if (result != false) {
           console.log("VALID! " + result);
           return result;
         }
