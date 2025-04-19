@@ -1,0 +1,10 @@
+
+
+
+function parseBible () {
+
+}
+
+export{
+
+}
