@@ -5,6 +5,8 @@ import './App.css'
 import bibleText from './../bible/bible.txt?raw'
 import {filterBible, getDailySymbol} from './../api/bibleReader.js'
 import {getStockToday} from './../api/checkStock.js'
+import {handler} from './../api/jesusSays.js'
+import {getAudioBlob} from './../api/jesusVoice.js'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -23,6 +25,9 @@ function App() {
       const result = await getStockToday();
       setStockName(result)
       console.log("result: " + result)
+    }
+    async function fetchJesusVoice() {
+      // const jesusResponse = 
     }
     fetchStock()
   }, [])

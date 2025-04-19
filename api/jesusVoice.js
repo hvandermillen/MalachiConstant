@@ -39,3 +39,16 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Failed to generate Jesus voice' });
   }
 }
+
+async function getAudioBlob(adviceString) {
+  let req = {
+    body: JSON.stringify(text)
+  }
+  let res = {}
+
+  const result = await handler(req,res)
+  const audioBlob = await res.blob();
+
+}
+
+export {getAudioBlob}

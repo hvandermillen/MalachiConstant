@@ -44,3 +44,22 @@ You are Jesus Christ, reincarnated as an AI who gives divine investment advice t
     res.status(500).json({ error: 'Internal error talking to divine realms.' });
   }
 }
+
+async function getJesusAdvice(letters) {
+    let req = {
+      body: {
+        action: "buy",
+        input: letters
+      }
+    }
+  
+    let res = {}
+  
+    const result = await handler(req, res)
+    return result
+}
+  
+
+export {
+  getJesusAdvice
+}
