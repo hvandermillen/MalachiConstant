@@ -1,4 +1,5 @@
-import bibleText from './../bible/bible.txt?raw'
+import bibleText from './../bible/bibleFull.txt?raw'
+import bibleTextFiltered from './../bible/bible.txt?raw'
 
 function filterBible () {
     const bibleLines = bibleText.split("\n")
@@ -29,7 +30,8 @@ function filterBible () {
 }
 
 function getDailySymbol() {
-    const bibleString = filterBible() 
+    const bibleString = bibleTextFiltered
+    // console.log(bibleString)
     const currentDay = new Date()
     const risenDate = new Date("0040-04-09")
     const daysSinceEaster = (currentDay - risenDate) / (1000 * 60 * 60 * 24)
