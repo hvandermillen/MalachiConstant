@@ -5,11 +5,12 @@ import './App.css'
 import bibleText from './../bible/bible.txt?raw'
 import {filterBible, getDailySymbol} from './../api/bibleReader.js'
 import {getStockToday} from './../api/checkStock.js'
-import {handler} from './../api/jesusSays.js'
+import {handler, getJesusAdvice} from './../api/jesusSays.js'
 import {getAudioBlob} from './../api/jesusVoice.js'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [audioUrl, setAudioUrl] = useState(null)
 
   // fs.readFile('/src/assets/bible.txt', (err,data) => {
   //   console.log(data.toString);
@@ -26,14 +27,28 @@ function App() {
       setStockName(result)
       console.log("result: " + result)
     }
-    async function fetchJesusVoice() {
-      // const jesusResponse = 
+    async function fetchJesusResponse() {
+      const jesusResponse = await getJesusAdvice("buy","as")
+      // console.log(jesusResponse.choices[0].message.content)
+      console.log(JSON.stringify(jesusResponse))
+      const blob = await getAudioBlob()
+      setAudioUrl(URL.createObjectURL(blob))
+      playAudio()
     }
     fetchStock()
+    fetchJesusResponse()
   }, [])
 
   function TodayStock() {
     return <p>{stockName}</p>
+  }
+
+
+  const playAudio = () => {
+    if (audioUrl) {
+      const audio = new Audio(audioUrl)
+      audio.play()
+    }
   }
 
   return (
