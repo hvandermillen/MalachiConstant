@@ -1,5 +1,5 @@
 // api/check-symbol.js
-import {getBibleSubstring} from './../api/bibleReader.js'
+import {getBibleSubstring} from './bibleReader.js'
 import Papa from 'papaparse';
 
 const stockObj = await parseCSV()

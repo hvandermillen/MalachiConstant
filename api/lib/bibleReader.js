@@ -1,5 +1,5 @@
-import bibleText from './../bible/bibleFull.txt?raw'
-import bibleTextFiltered from './../bible/bible.txt?raw'
+import bibleText from './../../bible/bibleFull.txt?raw'
+import bibleTextFiltered from './../../bible/bible.txt?raw'
 
 function filterBible () {
     const bibleLines = bibleText.split("\n")
