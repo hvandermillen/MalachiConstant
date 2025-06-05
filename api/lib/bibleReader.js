@@ -29,6 +29,8 @@ function filterBible () {
     return newBibleText
 }
 
+//returns the daily symbole (2 char and 3 char) based on the bible text
+//it may or may not be a valid symbol
 function getDailySymbol() {
     const bibleString = bibleTextFiltered
     // console.log(bibleString)

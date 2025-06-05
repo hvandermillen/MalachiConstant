@@ -1,10 +1,12 @@
 // import dotenv from 'dotenv';
 // dotenv.config();
 
-export default async function getJesusVoice(text) {
-  const { text } = req.body;
 
-  if (!text) {
+//i don't think this works
+export default async function getJesusVoice(text) {
+  const { bodyText } = req.body;
+
+  if (!bodyText) {
     return res.status(400).json({ error: 'Missing text for voice generation' });
   }
 
@@ -20,7 +22,7 @@ export default async function getJesusVoice(text) {
         'Accept': 'audio/mpeg'
       },
       body: JSON.stringify({
-        text,
+        bodyText,
         voice_settings: {
           stability: 0.5,
           similarity_boost: 0.75
@@ -37,9 +39,10 @@ export default async function getJesusVoice(text) {
   }
 };
 
+//this is supposed to input generated output from jesusSays and return an audio blob
 async function getAudioBlob(adviceString) {
   let req = {
-    body: JSON.stringify(text)
+    body: JSON.stringify(adviceString)
   }
   let res = {}
 
